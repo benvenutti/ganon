@@ -1,4 +1,5 @@
 #include <mutex>
+#include <optional>
 #include <queue>
 #include <type_traits>
 #include <utility>
@@ -16,12 +17,13 @@ public:
         m_queue.push( std::move( t ) );
     }
 
-    T pop()
+    std::optional< T > pop()
     {
         std::lock_guard<std::mutex> lock( m_mutex );
         if ( m_queue.empty() )
-            return T();
-        T val = std::move( m_queue.front() );
+            return std::nullopt;
+
+        std::optional< T > val( std::move( m_queue.front() ) );
         m_queue.pop();
         return val;
     }

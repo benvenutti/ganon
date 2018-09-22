@@ -104,9 +104,9 @@ int main(int argc, char* argv[]){
         tasks.emplace_back(
             std::async(std::launch::async, [=, &filter, &q, &finished, &mtx] { 
                 while(true){
-                    SeqBin val = q.pop();
-                    if(val.id!=""){ //if not empty
-                        insertKmer(filter, val.seq, val.bin, 0);
+                    auto val = q.pop();
+                    if(val){ //if not empty
+                        insertKmer(filter, val->seq, val->bin, 0);
                     }
                     if(finished && q.empty())
                         break;
