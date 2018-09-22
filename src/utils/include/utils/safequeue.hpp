@@ -28,7 +28,7 @@ public:
         return val;
     }
 
-    int size() const
+    auto size() const
     {
         std::lock_guard<std::mutex> lock( m_mutex );
         return m_queue.size();
