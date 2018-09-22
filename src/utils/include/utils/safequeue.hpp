@@ -8,7 +8,7 @@ class SafeQueue{
             std::lock_guard<std::mutex> lock(m);
             q.push(t);
         }
-        
+
         T pop(){
             std::lock_guard<std::mutex> lock(m);
             if ( q.empty() )
@@ -18,17 +18,19 @@ class SafeQueue{
             return val;
         }
 
-        int size(){
+        int size() const
+        {
             std::lock_guard<std::mutex> lock(m);
             return q.size();
         }
 
-        bool empty(){
+        bool empty() const
+        {
             std::lock_guard<std::mutex> lock(m);
             return q.empty();
         }
 
     private:
         std::queue<T> q;
-        std::mutex m;
+        mutable std::mutex m;
 };
