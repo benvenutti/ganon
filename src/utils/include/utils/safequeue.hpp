@@ -14,7 +14,7 @@ public:
     void push( T t )
     {
         std::lock_guard< std::mutex > lock( m_mutex );
-        m_queue.push( std::move( t ) );
+        m_queue.emplace( std::move( t ) );
     }
 
     std::optional< T > pop()
