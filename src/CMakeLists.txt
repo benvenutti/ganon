@@ -2,14 +2,26 @@
 # ganon utils
 # ===========================================================================
 
-# utils lib: this target holds resources shared by all other targets.
+add_library( utils INTERFACE )
+target_include_directories( utils INTERFACE utils/include )
 
-set( utils-src
-    utils/include/utils/safequeue.hpp )
+# ===========================================================================
+# config files
+# ===========================================================================
 
-add_library( utils STATIC ${utils-src} )
-set_target_properties( utils PROPERTIES LINKER_LANGUAGE CXX CXX_STANDARD 17 )
-target_include_directories( utils PUBLIC utils/include )
+configure_file(
+    ${PROJECT_SOURCE_DIR}/src/defaults/defaults.hpp.in
+    ${PROJECT_BINARY_DIR}/include/defaults/defaults.hpp )
+
+add_library( defaults INTERFACE )
+
+target_include_directories( defaults 
+    INTERFACE 
+    ${PROJECT_BINARY_DIR}/include )
+
+# ===========================================================================
+# ganon targets
+# ===========================================================================
 
 # helper function:
 
@@ -20,39 +32,46 @@ function( link_to_ganon_dependencies target )
         seqan
         Threads::Threads
         cxxopts
-        utils )
+        utils
+        defaults )
 endfunction()
-
-# ===========================================================================
-# ganon targets
-# ===========================================================================
 
 # ----------------------------------------------------------------------------
 # ganon-build
 # ----------------------------------------------------------------------------
 
-set( ganon-build-src
-    ganon-build/ganon-build.cpp )
+set( ganon-build-lib-src
+    ganon-build/CommandLineParser.cpp
+    ganon-build/GanonBuild.cpp )
 
-add_executable( ganon-build ${ganon-build-src} )
-link_to_ganon_dependencies( ganon-build )
+add_library( ganon-build-lib STATIC ${ganon-build-lib-src} )
+link_to_ganon_dependencies( ganon-build-lib )
+
+target_include_directories( ganon-build-lib
+    PUBLIC
+    ganon-build/include
+    PRIVATE
+    ganon-build/include/ganon-build )
+
+add_executable( ganon-build ganon-build/main.cpp )
+target_link_libraries( ganon-build ganon-build-lib )
 
 # ----------------------------------------------------------------------------
 # ganon-classify
 # ----------------------------------------------------------------------------
 
-set( ganon-classify-src
-    ganon-classify/ganon-classify.cpp )
+set( ganon-classify-lib-src
+    ganon-classify/CommandLineParser.cpp
+    ganon-classify/GanonClassify.cpp )
 
-add_executable( ganon-classify ${ganon-classify-src} )
-link_to_ganon_dependencies( ganon-classify )
+add_library( ganon-classify-lib STATIC ${ganon-classify-lib-src} )
+link_to_ganon_dependencies( ganon-classify-lib )
 
-# ----------------------------------------------------------------------------
-# ganon-update
-# ----------------------------------------------------------------------------
+target_include_directories( ganon-classify-lib
+    PUBLIC
+    ganon-classify/include
+    PRIVATE
+    ganon-classify/include/ganon-classify )
 
-set( ganon-update-src
-    ganon-update/ganon-update.cpp )
-
-add_executable( ganon-update ${ganon-update-src} )
-link_to_ganon_dependencies( ganon-update )
+add_executable( ganon-classify ganon-classify/main.cpp )
+target_link_libraries( ganon-classify ganon-classify-lib )
