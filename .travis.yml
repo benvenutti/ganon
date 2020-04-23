@@ -51,9 +51,9 @@ matrix:
     - name: "linux clang-8"
       os: linux
       addons:
-        apt: { packages: [clang-8, g++-8, python3-pip, python3-setuptools],
+        apt: { packages: [clang-8, libc++-8-dev, libc++abi-8-dev, python3-pip, python3-setuptools],
                sources:  [llvm-toolchain-xenial-8, ubuntu-toolchain-r-test] }
-      env: MATRIX_EVAL="CC=clang-8 && CXX=clang++-8 && BUILD_TYPE=Release"
+      env: MATRIX_EVAL="CC=clang-8 && CXX='clang++-8 -stdlib=libc++' && BUILD_TYPE=Release"
 
     - name: "linux clang-9"
       os: linux
