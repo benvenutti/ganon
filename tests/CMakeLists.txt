@@ -2,10 +2,6 @@
 # ganon tests
 # =============================================================================
 
-file( COPY ganon-build/data DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY} )
-file( COPY ganon-classify/data DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY} )
-file( COPY utils/data DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY} )
-
 add_executable( ganon-tests
     aux/Aux.hpp
     setup/Catch2.setup.cpp
@@ -22,6 +18,9 @@ target_link_libraries( ganon-tests
     ganon-classify-lib )
 
 target_include_directories( ganon-tests PRIVATE . )
+
+target_compile_definitions( ganon-tests
+    PRIVATE "GANON_TEST_FILES_PATH=${CMAKE_CURRENT_SOURCE_DIR}/")
 
 add_test( NAME GanonTestSuite
     COMMAND $<TARGET_FILE:ganon-tests>
