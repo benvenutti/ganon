@@ -58,9 +58,16 @@ matrix:
     - name: "linux clang-9"
       os: linux
       addons:
-        apt: { packages: [clang-9, g++-9, python3-pip, python3-setuptools],
-               sources:  [llvm-toolchain-xenial-9, ubuntu-toolchain-r-test] }
-      env: MATRIX_EVAL="CC=clang-8 && CXX=clang++-8 && BUILD_TYPE=Release"
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+            - sourceline: 'llvm-toolchain-xenial-9'
+          packages:
+            - clang-9
+            - g++-9
+            - python3-pip
+            - python3-setuptools
+      env: MATRIX_EVAL="CC=clang-9 && CXX=clang++-9 && BUILD_TYPE=Release"
 
 before_install:
   - eval "${MATRIX_EVAL}"
