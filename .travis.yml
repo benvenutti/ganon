@@ -8,6 +8,11 @@ matrix:
       osx_image: xcode11
       env: MATRIX_EVAL="BUILD_TYPE=Release"
 
+    - name: "osx xcode11"
+      os: osx
+      osx_image: xcode11
+      env: MATRIX_EVAL="BUILD_TYPE=Debug"
+
     - name: "osx xcode10.3"
       os: osx
       osx_image: xcode10.3
