@@ -44,7 +44,7 @@ matrix:
     - name: "linux clang-7"
       os: linux
       addons:
-        apt: { packages: [clang-7, g++-7, python3-pip, python3-setuptools],
+        apt: { packages: [clang-7, libstdc++-7-dev, python3-pip, python3-setuptools],
                sources:  [llvm-toolchain-xenial-7, ubuntu-toolchain-r-test] }
       env: MATRIX_EVAL="CC=clang-7 && CXX=clang++-7 && BUILD_TYPE=Release"
 
