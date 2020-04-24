@@ -3,30 +3,44 @@ dist: xenial
 
 matrix:
   include:
-    - name: "osx xcode11"
-      os: osx
-      osx_image: xcode11
-      env: MATRIX_EVAL="BUILD_TYPE=Release"
+    # ---------------------------------------------------------------------------------------------
+    # osx xcode
 
     - name: "osx xcode11"
       os: osx
       osx_image: xcode11
-      env: MATRIX_EVAL="BUILD_TYPE=Debug"
+      env: MATRIX_EVAL="BUILD_TYPE=Release"
 
     - name: "osx xcode10.3"
       os: osx
       osx_image: xcode10.3
       env: MATRIX_EVAL="BUILD_TYPE=Release"
 
+    - name: "osx xcode10.3 (debug)"
+      os: osx
+      osx_image: xcode10.3
+      env: MATRIX_EVAL="BUILD_TYPE=Debug"
+
+    # ---------------------------------------------------------------------------------------------
+    # osx gcc
+
     - name: "osx gcc-7"
       os: osx
       osx_image: xcode10
       env: MATRIX_EVAL="brew install gcc@7 gawk && CC=gcc-7 && CXX=g++-7 && BUILD_TYPE=Release"
 
+    - name: "osx gcc-7 (debug)"
+      os: osx
+      osx_image: xcode10
+      env: MATRIX_EVAL="brew install gcc@7 gawk && CC=gcc-7 && CXX=g++-7 && BUILD_TYPE=Debug"
+
     - name: "osx gcc-8"
       os: osx
       osx_image: xcode10
       env: MATRIX_EVAL="brew install gcc@8 gawk && CC=gcc-8 && CXX=g++-8 && BUILD_TYPE=Release"
+
+    # ---------------------------------------------------------------------------------------------
+    # linux gcc
 
     - name: "linux gcc-7"
       os: linux
@@ -34,6 +48,13 @@ matrix:
         apt: { packages: [g++-7, python3-pip, python3-setuptools],
                sources:  [ubuntu-toolchain-r-test] }
       env: MATRIX_EVAL="CC=gcc-7 && CXX=g++-7 && BUILD_TYPE=Release"
+
+    - name: "linux gcc-7 (debug)"
+      os: linux
+      addons:
+        apt: { packages: [g++-7, python3-pip, python3-setuptools],
+               sources:  [ubuntu-toolchain-r-test] }
+      env: MATRIX_EVAL="CC=gcc-7 && CXX=g++-7 && BUILD_TYPE=Debug"
 
     - name: "linux gcc-7 (coverage)"
       os: linux
@@ -56,12 +77,22 @@ matrix:
                sources:  [ubuntu-toolchain-r-test] }
       env: MATRIX_EVAL="CC=gcc-9 && CXX=g++-9 && BUILD_TYPE=Release"
 
+    # ---------------------------------------------------------------------------------------------
+    # linux clang
+
     - name: "linux clang-7 (libstdc++)"
       os: linux
       addons:
         apt: { packages: [clang-7, libstdc++-7-dev, python3-pip, python3-setuptools],
                sources:  [llvm-toolchain-xenial-7, ubuntu-toolchain-r-test] }
       env: MATRIX_EVAL="CC=clang-7 && CXX=clang++-7 && BUILD_TYPE=Release"
+
+    - name: "linux clang-7 (libstdc++, debug)"
+      os: linux
+      addons:
+        apt: { packages: [clang-7, libstdc++-7-dev, python3-pip, python3-setuptools],
+               sources:  [llvm-toolchain-xenial-7, ubuntu-toolchain-r-test] }
+      env: MATRIX_EVAL="CC=clang-7 && CXX=clang++-7 && BUILD_TYPE=Debug"
 
     - name: "linux clang-7 (libc++)"
       os: linux
@@ -70,6 +101,14 @@ matrix:
                           python3-pip, python3-setuptools],
                sources:  [llvm-toolchain-xenial-7, ubuntu-toolchain-r-test] }
       env: MATRIX_EVAL="CC=clang-7 && CXX='clang++-7 -stdlib=libc++' && BUILD_TYPE=Release"
+
+    - name: "linux clang-7 (libc++, debug)"
+      os: linux
+      addons:
+        apt: { packages: [clang-7, libc++-7-dev, libc++abi-7-dev,
+                          python3-pip, python3-setuptools],
+               sources:  [llvm-toolchain-xenial-7, ubuntu-toolchain-r-test] }
+      env: MATRIX_EVAL="CC=clang-7 && CXX='clang++-7 -stdlib=libc++' && BUILD_TYPE=Debug"
 
     - name: "linux clang-8 (libstdc++)"
       os: linux
