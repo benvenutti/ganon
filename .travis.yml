@@ -41,10 +41,17 @@ matrix:
     #            sources:  [ubuntu-toolchain-r-test] }
     #   env: MATRIX_EVAL="CC=gcc-9 && CXX=g++-9 && BUILD_TYPE=Release"
 
-    - name: "linux clang-7"
+    - name: "linux clang-7 (libstdc++)"
       os: linux
       addons:
         apt: { packages: [clang-7, libstdc++-7-dev, python3-pip, python3-setuptools],
+               sources:  [llvm-toolchain-xenial-7, ubuntu-toolchain-r-test] }
+      env: MATRIX_EVAL="CC=clang-7 && CXX=clang++-7 && BUILD_TYPE=Release"
+
+    - name: "linux clang-7 (libc++)"
+      os: linux
+      addons:
+        apt: { packages: [clang-7, libc++-7-dev, python3-pip, python3-setuptools],
                sources:  [llvm-toolchain-xenial-7, ubuntu-toolchain-r-test] }
       env: MATRIX_EVAL="CC=clang-7 && CXX=clang++-7 && BUILD_TYPE=Release"
 
