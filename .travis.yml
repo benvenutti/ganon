@@ -54,7 +54,7 @@ matrix:
         apt: { packages: [clang-7, libc++-7-dev, libc++abi-7-dev,
                           python3-pip, python3-setuptools],
                sources:  [llvm-toolchain-xenial-7, ubuntu-toolchain-r-test] }
-      env: MATRIX_EVAL="CC=clang-7 && CXX=clang++-7 && BUILD_TYPE=Release"
+      env: MATRIX_EVAL="CC=clang-7 && CXX='clang++-7 -stdlib=libc++' && BUILD_TYPE=Release"
 
     - name: "linux clang-8"
       os: linux
