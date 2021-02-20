@@ -43,7 +43,7 @@ public:
         std::unique_lock lock( m );
         while ( q.size() >= max_size )
             cv_push.wait( lock );
-        q.push( t );
+        q.push( std::move( t ) );
         cv_pop.notify_one();
     }
 
