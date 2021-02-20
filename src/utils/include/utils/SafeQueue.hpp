@@ -13,8 +13,8 @@ class SafeQueue
 {
 
 private:
-    std::queue< T >   q;
-    std::shared_mutex m;
+    std::queue< T >           q;
+    mutable std::shared_mutex m;
     // Very high max_size - default to std::numeric_limits< size_t >::max() - virtually no limit on size of the queue
     size_t                      max_size;
     bool                        push_over = false;
@@ -26,7 +26,6 @@ public:
     : max_size( std::numeric_limits< size_t >::max() )
     {
     }
-
 
     SafeQueue( size_t max )
     : max_size( max )
@@ -70,13 +69,13 @@ public:
         cv_pop.notify_all();
     }
 
-    int size()
+    int size() const
     {
         std::shared_lock lock( m );
         return q.size();
     }
 
-    bool empty()
+    bool empty() const
     {
         std::shared_lock lock( m );
         return q.empty();
