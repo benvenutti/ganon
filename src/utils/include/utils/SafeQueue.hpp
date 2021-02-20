@@ -3,6 +3,7 @@
 #include <condition_variable>
 #include <mutex>
 #include <queue>
+#include <shared_mutex>
 #include <type_traits>
 
 template < class T,
@@ -12,13 +13,13 @@ class SafeQueue
 {
 
 private:
-    std::queue< T > q;
-    std::mutex      m;
+    std::queue< T >   q;
+    std::shared_mutex m;
     // Very high max_size - default to std::numeric_limits< size_t >::max() - virtually no limit on size of the queue
-    size_t                  max_size;
-    bool                    push_over = false;
-    std::condition_variable cv_push;
-    std::condition_variable cv_pop;
+    size_t                      max_size;
+    bool                        push_over = false;
+    std::condition_variable_any cv_push;
+    std::condition_variable_any cv_pop;
 
 public:
     SafeQueue()
@@ -34,13 +35,13 @@ public:
 
     void set_max_size( size_t max )
     {
-        std::lock_guard< std::mutex > lock( m );
+        std::unique_lock lock( m );
         max_size = max;
     }
 
     void push( T t )
     {
-        std::unique_lock< std::mutex > lock( m );
+        std::unique_lock lock( m );
         while ( q.size() >= max_size )
             cv_push.wait( lock );
         q.push( t );
@@ -49,7 +50,7 @@ public:
 
     T pop()
     {
-        std::unique_lock< std::mutex > lock( m );
+        std::unique_lock lock( m );
         while ( q.size() == 0 )
         {
             if ( push_over )
@@ -64,20 +65,20 @@ public:
 
     void notify_push_over()
     {
-        std::lock_guard< std::mutex > lock( m );
+        std::unique_lock lock( m );
         push_over = true;
         cv_pop.notify_all();
     }
 
     int size()
     {
-        std::lock_guard< std::mutex > lock( m );
+        std::shared_lock lock( m );
         return q.size();
     }
 
     bool empty()
     {
-        std::lock_guard< std::mutex > lock( m );
+        std::shared_lock lock( m );
         return q.empty();
     }
 };
